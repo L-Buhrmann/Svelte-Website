@@ -1,10 +1,6 @@
 <script>
 
-  	let questions = [
-		{ id: 1, text: `Donut` },
-		{ id: 2, text: 'Rectangle' },
-		{ id: 3, text: 'Cone' }
-	];
+  let questions = [ `Donut` , 'Rectangle' , 'Cone' ,'Custom Upload' ];
 
   let selected;
 
@@ -29,11 +25,21 @@
 
   $: if (selectedPrinter == 'Prusa MK3') {
     selectedColor = 'Black'
-    Colors = ['Black','White','Red', 'Blue','Orange'];
+    Colors = [
+		{ color: 'Black', image: `https://via.placeholder.com/40x60/0bf/fff&text=A` },
+		{ color: 'White', image: 'https://via.placeholder.com/40x60/b0f/fff&text=B' },
+		{ color: 'Red', image: 'https://via.placeholder.com/40x60/0bf/fff&text=A' },
+    { color: 'Blue', image: 'https://via.placeholder.com/40x60/b0f/fff&text=B' },
+    { color: 'Orange', image: 'https://via.placeholder.com/40x60/0bf/fff&text=A' }
+	];
 	  }
     else if (selectedPrinter == 'Prusa MK2'){
     selectedColor = ''
-    Colors = ['Red', 'Blue','Orange'];
+    Colors = [
+      { color: 'Red', image: 'https://via.placeholder.com/40x60/0bf/fff&text=A' },
+      { color: 'Blue', image: 'https://via.placeholder.com/40x60/b0f/fff&text=B' },
+      { color: 'Orange', image: 'https://via.placeholder.com/40x60/0bf/fff&text=A' }
+    ];
     }
 
 
@@ -52,49 +58,155 @@
     } else {
       Check =  false;
     }
+  
+let files;
+
+$: if (files) {
+  // Note that `files` is of type `FileList`, not an Array:
+  // https://developer.mozilla.org/en-US/docs/Web/API/FileList
+  console.log(files);
+
+  for (const file of files) {
+    console.log(`${file.name}: ${file.size} bytes`);
+  }
+}
+
+
+
 
 </script>
+  <h1>Welcome</h1>
 
-<h1>Welcome</h1>
+  <h2>Objekt</h2>
+    <select bind:value={selected} on:change={() => (answer = ' ')}>
+      {#each questions as question}
+        <option value={question}>
+          {question}
+        </option>
+      {/each}
+    </select>
+    {#if selected == "Custom Upload" }
+      <label for="avatar">Upload your GCode file:</label>
+      <input accept="gcode" bind:files id="avatar" name="avatar" type="file" />
+    {/if}
+
+  <h2>Printer</h2>
+
+  {#each Printers as printer}
+    <label>
+      <input type="radio" bind:group={selectedPrinter} value={printer} />
+      {printer}
+    </label>
+  {/each}
+
+  <h2 class="testOutline">Material</h2>
+
+  {#each materials as material}
+    <label class="testOutline">
+      <input type="radio" bind:group={selectedMaterial} value={material} />
+      {material}
+    </label>
+  {/each}
 
 
+  <h2 class="testOutline">Colors</h2>
+  {#each Colors as color}
+    <label class="colors">
+      <input class="radiocolors" type="radio" bind:group={selectedColor} value={color.color}  />
+      <figure class="figurecolors">
+        
+        <img class="imagecolors" src={color.image} alt="Test" />
+        <figcaption>{color.color}</figcaption>
+      </figure >
+    </label>
+  {/each}
 
-<h2>Objekt</h2>
-  <select bind:value={selected} on:change={() => (answer = ' ')}>
-    {#each questions as question}
-      <option value={question}>
-        {question.text}
-      </option>
-    {/each}
-  </select>
-
-<h2>Printer</h2>
-
-{#each Printers as printer}
-	<label>
-		<input type="radio" bind:group={selectedPrinter} value={printer} />
-		{printer}
-	</label>
-{/each}
-
-<h2>Material</h2>
-
-{#each materials as material}
-	<label>
-		<input type="radio" bind:group={selectedMaterial} value={material} />
-		{material}
-	</label>
-{/each}
+  <label class="submit">
+    <h2 class="testOutline">Summary </h2>
+    <p class="submittext">
+    You ordered a {selectedColor} {selected ? selected.text : '[waiting...]'} in {selectedMaterial} 
+    </p>
+  <button disabled={Check}> Order </button>
+  </label>
 
 
-<h2>Colors</h2>
-{#each Colors as color}
-	<label>
-		<input type="radio" bind:group={selectedColor} value={color} />
-		{color}
-	</label>
-{/each}
-<p>
-	You ordered a {selectedColor} {selected ? selected.text : '[waiting...]'} in {selectedMaterial} 
-</p>
-<button disabled={Check}> Order </button>
+<style>
+  .testOutline{
+    /*outline: solid #ff004a;*/
+  }
+
+
+  .colors{
+    float:left;
+    top: 0;
+    display: flex;
+    height: 100px;
+    margin-top: -5px;
+    /*outline: solid #ff004a;*/
+  }
+  .figurecolors{
+    height: 70px;
+    width: 100px;
+    text-align: center;
+    top: 0;
+    display:center;
+    margin: 15px;
+    margin-top: 2px;
+    /*outline: solid #ff004a;*/
+  }
+  .imagecolors{
+    float:center;
+  }
+  .radiocolors{
+    position: center;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  .radiocolors +  .figurecolors .imagecolors {
+  cursor: pointer;
+  }
+  .radiocolors:checked +  .figurecolors .imagecolors{
+    background: radial-gradient(circle at 100% 100%, #ffffff 0, #ffffff 3px, transparent 3px) 0% 0%/7px 7px no-repeat,
+            radial-gradient(circle at 0 100%, #ffffff 0, #ffffff 3px, transparent 3px) 100% 0%/7px 7px no-repeat,
+            radial-gradient(circle at 100% 0, #ffffff 0, #ffffff 3px, transparent 3px) 0% 100%/7px 7px no-repeat,
+            radial-gradient(circle at 0 0, #ffffff 0, #ffffff 3px, transparent 3px) 100% 100%/7px 7px no-repeat,
+            linear-gradient(#ffffff, #ffffff) 50% 50%/calc(100% - 8px) calc(100% - 14px) no-repeat,
+            linear-gradient(#ffffff, #ffffff) 50% 50%/calc(100% - 14px) calc(100% - 8px) no-repeat,
+            linear-gradient(36deg, #ff004a 0%, #34478b 100%);
+    border-radius: 3px;
+    padding: 3px;
+    box-sizing: border-box;
+
+
+  } 
+  .submit{
+    clear:both;
+    float:center;
+    display: block;
+    position: relative;
+    /*outline: solid #ff004a;*/
+    }
+  .submittext{
+    /*outline: solid #ff004a;*/
+    margin-top: -5px;
+  }
+
+  :root {
+	--font-body: Arial, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+		Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+	--font-mono: 'Fira Mono', monospace;
+	--color-bg-0: rgb(202, 216, 228);
+	--color-bg-1: hsl(209, 36%, 86%);
+	--color-bg-2: hsl(224, 44%, 95%);
+	--color-theme-1: #ff3e00;
+	--color-theme-2: #4075a6;
+	--color-text: rgba(0, 0, 0, 0.7);
+	--column-width: 42rem;
+	--column-margin-top: 4rem;
+	font-family: var(--font-body);
+	color: var(--color-text);
+  }
+  
+  
+</style>
