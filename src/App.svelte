@@ -1,5 +1,7 @@
 <script>
-
+  import test from './assets/pencils-452238_640.jpg';
+  import logo from "./assets/ostfalia-logo-removebg-preview.png"
+  let imglogo = logo
   let questions = [ `Donut` , 'Rectangle' , 'Cone' ,'Custom Upload' ];
 
   let selected;
@@ -36,7 +38,7 @@
     else if (selectedPrinter == 'Prusa MK2'){
     selectedColor = ''
     Colors = [
-      { color: 'Red', image: 'https://via.placeholder.com/40x60/0bf/fff&text=A' },
+      { color: 'Red', image: logo },
       { color: 'Blue', image: 'https://via.placeholder.com/40x60/b0f/fff&text=B' },
       { color: 'Orange', image: 'https://via.placeholder.com/40x60/0bf/fff&text=A' }
     ];
@@ -71,14 +73,14 @@ $: if (files) {
   }
 }
 
-
-
-
 </script>
-  <h1>Welcome</h1>
 
-  <h2>Objekt</h2>
-    <select bind:value={selected} on:change={() => (answer = ' ')}>
+
+
+  <h1 style= float:left >Welcome</h1>
+  <img style= float:right;  src = {imglogo} alt = "Logo Ostfalia"/> 
+  <h2 style= clear:both >Object</h2>
+    <select class="selectbox" bind:value={selected} on:change={() => (answer = ' ')}>
       {#each questions as question}
         <option value={question}>
           {question}
@@ -124,7 +126,7 @@ $: if (files) {
   <label class="submit">
     <h2 class="testOutline">Summary </h2>
     <p class="submittext">
-    You ordered a {selectedColor} {selected ? selected.text : '[waiting...]'} in {selectedMaterial} 
+    You ordered a {selectedColor} {selected} in {selectedMaterial} 
     </p>
   <button disabled={Check}> Order </button>
   </label>
@@ -134,6 +136,24 @@ $: if (files) {
   .testOutline{
     /*outline: solid #ff004a;*/
   }
+
+  .selectbox {
+	cursor: pointer;
+	outline:0;
+	color: #333333;
+	font-size: 20px;
+	padding: 10px 10px;
+	min-width: 304px;
+	font-weight: bold;
+	border-radius: 8px;
+	border: 2px solid #D0C1D6FF;
+	background-color:rgb(149, 216, 236);
+}
+.selectbox:hover, .selectbox:focus {
+	background-color: #FFCD58FF;
+	color: #000000;
+	border: 2px solid #969696;
+}
 
 
   .colors{
@@ -156,6 +176,7 @@ $: if (files) {
   }
   .imagecolors{
     float:center;
+    max-width:100%;
   }
   .radiocolors{
     position: center;
