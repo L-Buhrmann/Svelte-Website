@@ -38,9 +38,9 @@
     else if (selectedPrinter == 'Prusa MK2'){
     selectedColor = ''
     Colors = [
-      { color: 'Red', image: logo },
-      { color: 'Blue', image: 'https://via.placeholder.com/40x60/b0f/fff&text=B' },
-      { color: 'Orange', image: 'https://via.placeholder.com/40x60/0bf/fff&text=A' }
+      { color: 'Red', image: test },
+      { color: 'Blue', image: test },
+      { color: 'Orange', image: test }
     ];
     }
 
@@ -77,7 +77,7 @@ $: if (files) {
 
 
 
-  <h1 style= float:left >Welcome</h1>
+  <h1 style= float:left;color:#01417e >Welcome</h1>
   <img style= float:right;  src = {imglogo} alt = "Logo Ostfalia"/> 
   <h2 style= clear:both >Object</h2>
     <select class="selectbox" bind:value={selected} on:change={() => (answer = ' ')}>
@@ -126,7 +126,7 @@ $: if (files) {
   <label class="submit">
     <h2 class="testOutline">Summary </h2>
     <p class="submittext">
-    You ordered a {selectedColor} {selected} in {selectedMaterial} 
+    Your selection: {selectedColor} {selected} in {selectedMaterial} 
     </p>
   <button disabled={Check}> Order </button>
   </label>
